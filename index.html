@@ -151,6 +151,91 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Font-Boosting-——chrome手机端页面文字显示bug" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/02/09/Font-Boosting-——chrome手机端页面文字显示bug/">Font Boosting ——chrome手机端页面文字显示bug</a>
+    </h1>
+  
+
+        
+        <a href="/2017/02/09/Font-Boosting-——chrome手机端页面文字显示bug/" class="archive-article-date">
+  	<time datetime="2017-02-09T03:06:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="http://www.360doc.com/content/16/0224/12/19291760_536900294.shtml" target="_blank" rel="external">参考网址</a><br>在做手机端页面时，会出现一个奇怪的问题:字体的显示大小与在css中指定的大小不一致。</p>
+<p>当页面中的标签数量或者文本数量大于某一个值，或者当CSS定义的字体大小落在某个区间时，这个问题才会被触发。而且字体变大后的值也随着原始定义的字体大小而改变</p>
+<p>这个特性被称作<code>Text Autosizer</code>，又称<code>Font Boosting</code>、<code>Font Inflation</code>，是<code>Webkit</code>给移动端浏览器提供的一个特性：当我们在手机上浏览网页时，很可能因为原始页面宽度较大，在手机屏幕上缩小后就看不清其中的文字了。而 Font Boosting 特性在这时会自动将其中的文字字体变大，保证在即不需要左右滑动屏幕，也不需要双击放大屏幕内容的前提下，也可以让人们方便的阅读页面中的文本。</p>
+<p>不过这个特性并不总是有必要的，网上有这么一些处理方案：</p>
+<blockquote>
+<ol>
+<li>手动指定<code>viewport width=320</code> ，这时Font Boosting 不会被触发。（后边可以知道，这个说法不严谨，在其他设置均为默认值时，这一条才有效）</li>
+<li>Font Boosting 仅在未限定尺寸的文本流中有效，给元素指定宽高，就可以避免Font Boosting被触发。</li>
+</ol>
+</blockquote>
+<p>显然第 2 条方案是有缺陷的，文本内容不可能都指定宽高。不过还好，我们可以通过指定<code>max-height</code>来禁掉Font Boosting。比如 <code>body * { max-height: 999999px; }</code>就可以无副作用的禁掉 Font Boosting 特性。</p>
+<p>到这里，我们已经明白问题所在，并且也有解决方案了。但是有一个问题仍然困扰着我：当字体大于某一个值时（比如当不指定<code>viewport width</code>，手机屏幕<code>width=320</code>，字体大于等于<code>82px</code>时），这个 Font Boosting 就始终不会被触发。Chrome 是如何计算的，这其中的逻辑又是什么？</p>
+<p>经搜索，在网上找到了以下内容。</p>
+<p>简单说来，Font Boosting 的计算规则伪代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">multiplier = Math.max(1, deviceScaleAdjustment * textScalingSlider * systemFontScale * clusterWidth / screenWidth);</div><div class="line">if (originFontSize &lt; 16) &#123;</div><div class="line">    computedFontSize = originFontSize * multiplier;</div><div class="line">&#125;</div><div class="line">else if (16 &lt;= originFontSize &lt;= (32 * multiplier - 16)) &#123;</div><div class="line">    computedFontSize = (originFontSize / 2) + (16 * multiplier - 8);</div><div class="line">&#125;</div><div class="line">else if (originFontSize &gt; (32 * multiplier - 16)) &#123;</div><div class="line">    computedFontSize = originFontSize;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>其中变量名解释如下：</p>
+<p><code>originFontSize</code> : 原始字体大小</p>
+<p><code>computedFontSize</code> : 经过计算后的字体大小</p>
+<p><code>multiplier</code> : 换算系数，值由以下几个值计算得到</p>
+<p><code>deviceScaleAdjustment</code> : 当指定 <code>viewport width=device-width</code> 时此值为 1，否则值在 1.05 - 1.3 之间，有专门的计算规则</p>
+<p><code>textScalingSlider</code> : 浏览器中手动指定的缩放比例，默认为 1</p>
+<p><code>systemFontScale</code> : 系统字体大小，Android设备可以在「设备 - 显示 - 字体大小」处设置，默认为 1</p>
+<p><code>clusterWidth</code> : 应用 Font Boosting 特性字体所在元素的宽度（如何确定这个元素请参考上边两个链接）</p>
+<p><code>screenWidth</code> : 设备屏幕分辨率（DIPs, Density-Independent Pixels），如 iPhone 5 为 320</p>
+<p>说到底，只需要记住 body * { max-height: 999999px; } 就OK了。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">移动端</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/02/09/Font-Boosting-——chrome手机端页面文字显示bug/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-Hexo 搭建github博客" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -300,6 +385,10 @@
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">移动端</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>
