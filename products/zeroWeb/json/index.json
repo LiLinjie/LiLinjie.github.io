@@ -1,0 +1,46 @@
+{
+	"data": {
+		"news": [
+			{
+				"id": 1,
+				"imgUrl": "https://www.zerodensity.tv/wp-content/uploads/2017/12/ZeroDensirt_London_event-250x202.jpg",
+				"title": "新闻标题1"
+			},
+			{
+				"id": 2,
+				"imgUrl": "https://www.zerodensity.tv/wp-content/uploads/2017/12/ZeroDensirt_London_event-250x202.jpg",
+				"title": "新闻标题2"
+			},
+			{
+				"id": 3,
+				"imgUrl": "https://www.zerodensity.tv/wp-content/uploads/2017/12/ZeroDensirt_London_event-250x202.jpg",
+				"title": "新闻标题3"
+			},
+			{
+				"id": 4,
+				"imgUrl": "https://www.zerodensity.tv/wp-content/uploads/2017/12/ZeroDensirt_London_event-250x202.jpg",
+				"title": "新闻标题4"
+			}
+		],
+		"products": [
+			{
+				"id": 1,
+				"imgUrl": "https://www.zerodensity.tv/wp-content/uploads/2017/12/ZeroDensirt_London_event-250x202.jpg"
+			},
+			{
+				"id": 2,
+				"imgUrl": "https://www.zerodensity.tv/wp-content/uploads/2017/12/ZeroDensirt_London_event-250x202.jpg"
+			}
+		],
+		"blogs": [
+			{
+				"id": 1,
+				"imgUrl": "https://www.zerodensity.tv/wp-content/uploads/2017/12/ZeroDensirt_London_event-250x202.jpg"
+			},
+			{
+				"id": 2,
+				"imgUrl": "https://www.zerodensity.tv/wp-content/uploads/2017/12/ZeroDensirt_London_event-250x202.jpg"
+			}
+		]
+	}
+}
