@@ -119,7 +119,7 @@
     <script>
         $(function(){
             $.ajax({
-                url: '/json/works.json?v=' + new Date().getTime(),
+                url: 'json/works.json?v=' + new Date().getTime(),
                 success: function (data) {
                     var html = '';
                     for (var i = 0; i < data.data.length; i++) {
