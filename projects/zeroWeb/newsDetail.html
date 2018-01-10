@@ -126,17 +126,23 @@
           if (id) {
 
             $.ajax({
-                url: 'json/news/' + id + '.json?v=' + new Date().getTime(),
+                url: '/json/news/' + id + '.json?v=' + new Date().getTime(),
                 success: function (data) {
 
                     var html = '';
                     var pHtml = '';
                     html += '<div class="title">' + data.data.title + '</div><div class="blog-detail-main">';
-                    if (data.data.videoUrl) {
-                      html += '<video class="video" controls="controls"><source src="' + data.data.videoUrl + '" type="video/mp4" />您的浏览器暂时不支持播放视频，请用最新版Chrome浏览器进行浏览。</video>'
-                    }
+                    // if (data.data.videoUrl) {
+                    //   html += '<video class="video" controls="controls"><source src="' + data.data.videoUrl + '" type="video/mp4" />您的浏览器暂时不支持播放视频，请用最新版Chrome浏览器进行浏览。</video>'
+                    // }
                     for (var i = 0; i < data.data.content.length; i++) {
-                      pHtml += '<p>' + data.data.content[i] + '</p>'   
+                      if (data.data.content[i].imgUrl) {
+                        pHtml += '<p><img src="' + data.data.content[i].imgUrl + '"></p>';
+                      } else if (data.data.content[i].videoUrl) {
+                        pHtml += '<p><video class="video" controls="controls"><source src="' + data.data.content[i].videoUrl + '" type="video/mp4" />您的浏览器暂时不支持播放视频，请用最新版Chrome浏览器进行浏览。</video></p>';
+                      } else if (data.data.content[i].text) {
+                        pHtml += '<p>' + data.data.content[i].text + '</p>'
+                      }  
                     }
                     html += pHtml;
                     html += '</div>';

@@ -121,7 +121,7 @@
     <script>
         $(function(){
             $.ajax({
-                url: 'json/news.json?v=' + new Date().getTime(),
+                url: '/json/news.json?v=' + new Date().getTime(),
                 success: function (data) {
 
                     var html = '';
