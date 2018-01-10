@@ -126,7 +126,7 @@
           if (id) {
 
             $.ajax({
-                url: '/json/news/' + id + '.json?v=' + new Date().getTime(),
+                url: 'json/news/' + id + '.json?v=' + new Date().getTime(),
                 success: function (data) {
 
                     var html = '';
